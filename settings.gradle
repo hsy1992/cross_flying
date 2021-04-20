@@ -1,0 +1,3 @@
+include ':flying'
+include ':app'
+rootProject.name = "flying"
