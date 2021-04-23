@@ -14,10 +14,10 @@ import kotlin.reflect.KClass
  */
 class ServiceManager: IServiceManager {
 
-    private val TAG = Constant.PREFIX + ServiceManager::class.simpleName
 
     companion object {
         val instance = SingletonHolder.holder
+        val TAG = Constant.PREFIX + ServiceManager::class.simpleName
     }
 
     private object SingletonHolder {

@@ -14,21 +14,22 @@ import android.os.Process
 class DispatchThread {
 
     companion object {
-        val instance = SingletonHolder.holder
+        val INSTANCE = SingletonHolder.holder
+        val MAIN_THREAD = Dispatch(Looper.getMainLooper())
+        val SINGLE_THREAD = create("single")
+
+        fun create(name: String): Dispatch = create(name, Process.THREAD_PRIORITY_DEFAULT)
+
+        fun create(name: String, priority: Int): Dispatch {
+            val handlerThread = HandlerThread(name, priority)
+            handlerThread.start()
+            val looper = handlerThread.looper
+            return Dispatch(looper)
+        }
     }
 
     private object SingletonHolder {
         val holder = DispatchThread()
     }
 
-    fun create(name: String): Dispatch = create(name, Process.THREAD_PRIORITY_DEFAULT)
-
-    fun create(name: String, priority: Int): Dispatch {
-        val handlerThread = HandlerThread(name, priority)
-        handlerThread.start()
-        val looper = handlerThread.looper
-        return Dispatch(looper)
-    }
-
-    val mMainQueue = Dispatch(Looper.getMainLooper())
 }

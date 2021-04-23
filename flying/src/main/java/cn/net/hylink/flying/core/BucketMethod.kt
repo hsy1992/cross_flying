@@ -8,4 +8,6 @@ package cn.net.hylink.flying.core
  * @Version 1.0
  */
 class BucketMethod {
+
+
 }
