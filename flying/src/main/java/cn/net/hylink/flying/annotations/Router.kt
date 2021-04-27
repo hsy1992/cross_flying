@@ -13,5 +13,7 @@ annotation class Router (
     /**
      *  路由地址
      */
-    val path: String
+    val path: String,
+
+    val large: Boolean = false
 )

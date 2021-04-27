@@ -13,9 +13,5 @@ interface IServiceManager {
 
     fun publish(service: Any)
 
-    fun publish(service: Any, interfaces: KClass<Any>)
-
     fun unPublish(service: Any)
-
-    fun unPublish(service: Any, interfaces: KClass<Any>)
 }

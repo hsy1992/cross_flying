@@ -11,7 +11,6 @@ import java.lang.reflect.Method
  */
 class Invoker constructor(
         private val target: Method,
-        private val route: String,
         private val owner: Any
 ) : AbsMethodInvoker(target) {
 

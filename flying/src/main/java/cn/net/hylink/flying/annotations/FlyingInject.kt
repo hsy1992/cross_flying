@@ -9,5 +9,4 @@ package cn.net.hylink.flying.annotations
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-annotation class FlyingInject (
-)
+annotation class FlyingInject
