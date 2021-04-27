@@ -22,7 +22,7 @@ class FlyBundle constructor(
      * 发送
      */
     fun fly(largeData: Boolean = false): Bundle? {
-        return flyingMessage.fly(mBundle.apply {
+        return flyingMessage.fly(router, mBundle.apply {
             this.putString(Constant.FLY_KEY_ROUTER, router)
             this.putInt(Constant.FLY_KEY_FLAGS, Constant.Parameters.FLAGS_BUNDLE)
         }, largeData)

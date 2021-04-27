@@ -18,7 +18,9 @@ class FlyingMessage constructor(
         private val mContext: Context,
         private val authority: String
 ) {
-    private val base = Uri.parse("content://$authority")
+    val base = Uri.parse("content://$authority")!!
+
+    val mContextGobal = mContext.applicationContext!!
 
     companion object {
         val TAG = Constant.PREFIX + FlyingMessage::class.java.simpleName
@@ -28,16 +30,12 @@ class FlyingMessage constructor(
 
     fun route(router: String, vararg params: Any?) = FlyArgs(this, router, params)
 
-    fun fly(requestBundle: Bundle, largeData: Boolean): Bundle? {
-        return if (!largeData) {
-            ConvertFactory.INSTANCE.convertAndFly(mContext, base, requestBundle)
-        } else {
-            null
-        }
+    fun fly(router: String, requestBundle: Bundle, largeData: Boolean): Bundle? {
+        return ConvertFactory.INSTANCE.convertAndFly(this, router, requestBundle, largeData)
     }
 
-    fun fly(requestBundle: String, largeData: Boolean, params: Array<out Any?>) {
-        TODO("Not yet implemented")
+    fun fly(router: String, largeData: Boolean, params: Array<out Any?>): Bundle? {
+        return ConvertFactory.INSTANCE.convertAndFly(this, router, largeData, params)
     }
 
 

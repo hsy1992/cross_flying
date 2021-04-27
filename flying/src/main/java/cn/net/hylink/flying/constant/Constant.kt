@@ -43,10 +43,20 @@ object Constant {
 
     const val FLY_KEY_INDEX = "key_%d"
 
+    const val FLY_KEY_CLASS = "key_class"
+
     const val FLY_KEY_CLASS_INDEX = "key_class_%d"
 
-    object Parameters {
+    /**
+     * uri 路径开始
+     */
+    const val FLY_PATH_START = "path_start"
 
+    const val FLY_PATH_SEGMENT_METHOD = "1"
+
+    const val FLY_PATH_SEGMENT_ROUTE = "2"
+
+    object Parameters {
         const val FLAGS_BUNDLE = 1
     }
 

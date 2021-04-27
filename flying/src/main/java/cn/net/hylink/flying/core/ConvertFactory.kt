@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.RemoteException
 import cn.net.hylink.flying.constant.Constant
+import cn.net.hylink.flying.core.boxing.RouteClientBoxMenImpl
 
 /**
  * @ClassName ConvertFactory
@@ -24,14 +25,22 @@ class ConvertFactory {
         val holder = ConvertFactory()
     }
 
-    @Throws(Exception::class)
     @Synchronized
-    fun convertAndFly(mContext: Context, uri: Uri, requestBundle: Bundle): Bundle? {
-        return mContext.applicationContext.contentResolver.call(uri, "", null, requestBundle)?.apply {
-            parseResponse(requestBundle, this)
+    @Throws(Exception::class)
+    fun convertAndFly(flyingMessage: FlyingMessage, router: String, requestBundle: Bundle, largeData: Boolean = false): Bundle? {
+        return if (!largeData) {
+            flyingMessage.mContextGobal.contentResolver.call(flyingMessage.base,
+                    "", null, requestBundle)?.apply {
+                parseResponse(requestBundle, this)
+            }
+        } else {
+            val responseBundle = RealCall(flyingMessage).execute(router, requestBundle)
+            if (responseBundle != null) parseResponse(requestBundle, responseBundle)
+            responseBundle
         }
     }
 
+    @Synchronized
     @Throws(Exception::class)
     private fun parseResponse(requestBundle: Bundle, responseBundle: Bundle) {
         var message: String? = null
@@ -51,8 +60,8 @@ class ConvertFactory {
         responseBundle.remove(Constant.FLY_KEY_RESPONSE_CODE)
     }
 
-    @Synchronized
-    fun convertAndFly(flyingMessage: FlyingMessage, router: String, vararg params: Any?): Bundle? {
+    fun convertAndFly(flyingMessage: FlyingMessage, router: String, requestBundle: Boolean,
+                      largeData: Array<out Any?>): Bundle? {
         return null
     }
 

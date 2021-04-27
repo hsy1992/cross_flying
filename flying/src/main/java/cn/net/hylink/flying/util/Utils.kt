@@ -2,6 +2,7 @@ package cn.net.hylink.flying.util
 
 import android.os.Bundle
 import android.os.Parcelable
+import cn.net.hylink.flying.ashmem.Ashmem
 import java.io.Serializable
 
 /**
@@ -52,7 +53,7 @@ object Utils {
             is Float -> bundle.putFloat(key, arg)
             is Byte -> bundle.putByte(key, arg)
             is Boolean -> bundle.putBoolean(key, arg)
-            is ByteArray -> bundle.putByteArray(key, arg)
+            is ByteArray -> bundle.putParcelable(key, Ashmem.byteArrayToFileDescriptor(arg))
             is String -> bundle.putString(key, arg)
             is Parcelable -> bundle.putParcelable(key, arg)
             is Serializable -> bundle.putSerializable(key, arg)
