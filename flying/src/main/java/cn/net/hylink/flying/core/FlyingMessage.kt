@@ -30,13 +30,11 @@ class FlyingMessage constructor(
 
     fun route(router: String, vararg params: Any?) = FlyArgs(this, router, params)
 
-    fun fly(router: String, requestBundle: Bundle, largeData: Boolean): Bundle? {
-        return ConvertFactory.INSTANCE.convertAndFly(this, router, requestBundle, largeData)
+    fun fly(requestBundle: Bundle): Bundle? {
+        return ConvertFactory.INSTANCE.convertAndFly(this, requestBundle)
     }
 
-    fun fly(router: String, largeData: Boolean, params: Array<out Any?>): Bundle? {
-        return ConvertFactory.INSTANCE.convertAndFly(this, router, largeData, params)
+    fun fly(router: String, params: Array<Any?>): Bundle? {
+        return ConvertFactory.INSTANCE.convertAndFly(this, router, params)
     }
-
-
 }

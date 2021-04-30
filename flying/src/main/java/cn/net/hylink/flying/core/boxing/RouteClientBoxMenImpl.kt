@@ -15,7 +15,7 @@ import java.util.*
  */
 class RouteClientBoxMenImpl: IRouteClientBoxMen<Bundle, Bundle> {
 
-    override fun boxing(router: String?, params: Array<Any?>): Bundle? {
+    override fun boxing(router: String?, params: Array<Any?>): Bundle {
         return Bundle().apply {
             this.putInt(Constant.FLY_KEY_LENGTH, params.size)
             this.putString(Constant.FLY_KEY_ROUTER, router)

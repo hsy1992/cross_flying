@@ -56,6 +56,11 @@ object Constant {
 
     const val FLY_PATH_SEGMENT_ROUTE = "2"
 
+    /**
+     * 发送消息得包名key
+     */
+    const val FLY_KEY_CALLING_PACKAGE = "key_calling_package"
+
     object Parameters {
         const val FLAGS_BUNDLE = 1
     }

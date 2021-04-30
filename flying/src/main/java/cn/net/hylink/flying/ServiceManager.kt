@@ -6,6 +6,7 @@ import cn.net.hylink.flying.constant.Constant
 import cn.net.hylink.flying.core.invoker.IMethodInvoker
 import cn.net.hylink.flying.core.invoker.RouteInvoker
 import cn.net.hylink.flying.interfaces.IServiceManager
+import cn.net.hylink.flying.log.FlyingLog
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -23,6 +24,7 @@ class ServiceManager : IServiceManager {
     }
 
     private val routers: ConcurrentHashMap<String, Array<IMethodInvoker>> = ConcurrentHashMap()
+    private val services: ConcurrentHashMap<String, String> = ConcurrentHashMap()
 
     private object SingletonHolder {
         val holder = ServiceManager()
@@ -34,6 +36,7 @@ class ServiceManager : IServiceManager {
             method.getAnnotation(Router::class.java)?.let {
                 if (!TextUtils.isEmpty(it.path)) {
                     method.isAccessible = true
+                    services[it.path] = service::javaClass.name
                     cacheMethodToRouter(service::javaClass.name, RouteInvoker(method, it.path, service))
                 }
             }
@@ -46,6 +49,7 @@ class ServiceManager : IServiceManager {
     @Synchronized
     private fun cacheMethodToRouter(className: String, routeInvoker: RouteInvoker) {
         routers[className]?.let {
+            FlyingLog.d(TAG, "缓存路由：$className")
             routers[className] = arrayOf(routeInvoker as IMethodInvoker)
         }
     }
@@ -53,5 +57,17 @@ class ServiceManager : IServiceManager {
     @Synchronized
     override fun unPublish(service: Any) {
         routers.remove(service::javaClass.name)
+        services.forEach {
+            if (it.value == service::javaClass.name) {
+                services.remove(it.key)
+            }
+        }
+
+        FlyingLog.d(TAG, "解除路由：${service::javaClass.name}")
     }
+
+    /**
+     * 获取缓存得方法
+     */
+    fun getCacheMethods(router: String): Array<IMethodInvoker>? = routers[services[router]]
 }

@@ -12,7 +12,7 @@ import java.lang.reflect.Method
  */
 class RouteInvoker constructor(
         private val target: Method,
-        private val route: String,
+        val route: String,
         private val owner: Any
 ) : AbsMethodInvoker(target) {
 

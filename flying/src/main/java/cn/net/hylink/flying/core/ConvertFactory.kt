@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.RemoteException
 import cn.net.hylink.flying.constant.Constant
 import cn.net.hylink.flying.core.boxing.RouteClientBoxMenImpl
+import cn.net.hylink.flying.log.FlyingLog
 
 /**
  * @ClassName ConvertFactory
@@ -27,17 +28,10 @@ class ConvertFactory {
 
     @Synchronized
     @Throws(Exception::class)
-    fun convertAndFly(flyingMessage: FlyingMessage, router: String, requestBundle: Bundle, largeData: Boolean = false): Bundle? {
-        return if (!largeData) {
-            flyingMessage.mContextGobal.contentResolver.call(flyingMessage.base,
-                    "", null, requestBundle)?.apply {
-                parseResponse(requestBundle, this)
-            }
-        } else {
-            val responseBundle = RealCall(flyingMessage).execute(router, requestBundle)
-            if (responseBundle != null) parseResponse(requestBundle, responseBundle)
-            responseBundle
-        }
+    fun convertAndFly(flyingMessage: FlyingMessage, requestBundle: Bundle): Bundle?
+            = flyingMessage.mContextGobal.contentResolver.call(flyingMessage.base,
+                "", null, requestBundle)?.apply {
+            parseResponse(requestBundle, this)
     }
 
     @Synchronized
@@ -56,13 +50,18 @@ class ConvertFactory {
                 message = "${requestBundle[Constant.FLY_KEY_ROUTER]} not found"
         }
 
-        message?.let { throw RemoteException("$code, $message") }
+        message?.let { FlyingLog.e(TAG, "$code, $message") }
         responseBundle.remove(Constant.FLY_KEY_RESPONSE_CODE)
     }
 
-    fun convertAndFly(flyingMessage: FlyingMessage, router: String, requestBundle: Boolean,
-                      largeData: Array<out Any?>): Bundle? {
-        return null
+    @Synchronized
+    @Throws(Exception::class)
+    fun convertAndFly(flyingMessage: FlyingMessage,
+                      router: String,
+                      params: Array<Any?>): Bundle? {
+        val requestBundle = RouteClientBoxMenImpl().boxing(router, params)
+        return RealCall(flyingMessage).execute(router, requestBundle)?.apply {
+            parseResponse(requestBundle, this)
+        }
     }
-
 }

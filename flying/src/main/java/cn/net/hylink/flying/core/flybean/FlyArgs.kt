@@ -16,7 +16,7 @@ class FlyArgs constructor(
 ) {
     private val params = args
 
-    fun fly(largeData: Boolean = false) {
-        flyingMessage.fly(router, largeData, params)
+    fun fly() {
+        flyingMessage.fly(router, params as Array<Any?>)
     }
 }
