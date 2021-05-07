@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import cn.net.hylink.flying.ServiceManager
-import cn.net.hylink.flying.annotations.FlyingInject
 import cn.net.hylink.flying.annotations.Router
 
 class MainActivity : AppCompatActivity() {
