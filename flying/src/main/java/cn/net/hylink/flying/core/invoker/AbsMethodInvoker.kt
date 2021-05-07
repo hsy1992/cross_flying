@@ -34,7 +34,7 @@ abstract class AbsMethodInvoker (
      */
     @Throws(InvocationTargetException::class, IllegalAccessException::class)
     fun invoke(owner: Any, vararg arg: Any?): Any? =
-            if (mDispatch == null) target.invoke(owner, arg) else invokeByDispatch(owner, arg)
+            if (mDispatch == null) target.invoke(owner, *arg) else invokeByDispatch(owner, *arg)
 
     @Throws(InvocationTargetException::class, IllegalAccessException::class)
     private fun invokeByDispatch(owner: Any, vararg arg: Any?): Any? {

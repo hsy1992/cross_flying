@@ -11,9 +11,9 @@ import java.lang.reflect.Method
  * @Version 1.0
  */
 class RouteInvoker constructor(
-        private val target: Method,
-        val route: String,
-        private val owner: Any
+        var path: String,
+        val target: Method,
+        val owner: Any
 ) : AbsMethodInvoker(target) {
 
     private var types = target.parameterTypes
@@ -23,7 +23,7 @@ class RouteInvoker constructor(
 
     init {
         for (i in 0 until parametersLength) {
-            if (!Utils.checkClassAccord(types[i])) throw RuntimeException("returnType not support")
+            if (!Utils.checkClassAccord(types[i])) throw RuntimeException("parameterTypes not support")
         }
     }
 
@@ -36,13 +36,13 @@ class RouteInvoker constructor(
         //获取方法参数
         for (i in 0 until parametersLength) {
             arg[i]?.let {
-                if (it::class.java != types[i]) {
-                    throw RuntimeException("invoke fail with bad arg")
+                if (!it::class.java.isAssignableFrom(types[i])) {
+                    throw RuntimeException("invoke fail with bad arg, need ${types[i]} find ${it::class.java}")
                 }
                 parameters[i] = arg[i]
             }
         }
-        return invoke(owner, parameters)
+        return invoke(owner, *parameters)
     }
 
 }

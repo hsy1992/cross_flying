@@ -1,9 +1,6 @@
 package cn.net.hylink.flying.core
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import android.os.RemoteException
 import cn.net.hylink.flying.constant.Constant
 import cn.net.hylink.flying.core.boxing.RouteClientBoxMenImpl
 import cn.net.hylink.flying.log.FlyingLog
@@ -18,7 +15,8 @@ import cn.net.hylink.flying.log.FlyingLog
 class ConvertFactory {
 
     companion object {
-        val INSTANCE = SingletonHolder.holder
+        val INSTANCE =
+            SingletonHolder.holder
         val TAG = Constant.PREFIX + ConvertFactory::class.simpleName
     }
 
@@ -58,9 +56,11 @@ class ConvertFactory {
     @Throws(Exception::class)
     fun convertAndFly(flyingMessage: FlyingMessage,
                       router: String,
-                      params: Array<Any?>): Bundle? {
-        val requestBundle = RouteClientBoxMenImpl().boxing(router, params)
-        return RealCall(flyingMessage).execute(router, requestBundle)?.apply {
+                      params: Array<out Any?>): Bundle? {
+        val requestBundle = RouteClientBoxMenImpl()
+            .boxing(router, params)
+        return RealCall(flyingMessage)
+            .execute(router, requestBundle)?.apply {
             parseResponse(requestBundle, this)
         }
     }

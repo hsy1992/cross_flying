@@ -1,6 +1,5 @@
 package cn.net.hylink.flying
 
-import android.text.TextUtils
 import cn.net.hylink.flying.annotations.Router
 import cn.net.hylink.flying.constant.Constant
 import cn.net.hylink.flying.core.invoker.IMethodInvoker
@@ -23,8 +22,8 @@ class ServiceManager : IServiceManager {
         val TAG = Constant.PREFIX + ServiceManager::class.simpleName
     }
 
-    private val routers: ConcurrentHashMap<String, Array<IMethodInvoker>> = ConcurrentHashMap()
-    private val services: ConcurrentHashMap<String, String> = ConcurrentHashMap()
+    private val routers: ConcurrentHashMap<String, ArrayList<IMethodInvoker>> = ConcurrentHashMap()
+    private val services: ConcurrentHashMap<String, IMethodInvoker> = ConcurrentHashMap()
 
     private object SingletonHolder {
         val holder = ServiceManager()
@@ -34,10 +33,16 @@ class ServiceManager : IServiceManager {
     override fun publish(service: Any) {
         service::class.java.declaredMethods.forEach { method ->
             method.getAnnotation(Router::class.java)?.let {
-                if (!TextUtils.isEmpty(it.path)) {
+                if (it.path.isNotEmpty()) {
                     method.isAccessible = true
-                    services[it.path] = service::javaClass.name
-                    cacheMethodToRouter(service::javaClass.name, RouteInvoker(method, it.path, service))
+                    FlyingLog.i(message = service::class.java.name)
+                    cacheMethodToRouter(service::class.java.name,
+                        RouteInvoker(
+                            it.path,
+                            method,
+                            service
+                        )
+                    )
                 }
             }
         }
@@ -48,26 +53,32 @@ class ServiceManager : IServiceManager {
      */
     @Synchronized
     private fun cacheMethodToRouter(className: String, routeInvoker: RouteInvoker) {
+        FlyingLog.d(TAG, "缓存路由：$className,路由地址:${routeInvoker.path},${routeInvoker.target.name}")
+
+        services[routeInvoker.path] = routeInvoker
+        val array = arrayListOf<IMethodInvoker>(routeInvoker)
         routers[className]?.let {
-            FlyingLog.d(TAG, "缓存路由：$className")
-            routers[className] = arrayOf(routeInvoker as IMethodInvoker)
+            array.addAll(it)
         }
+        routers[className] = array
     }
 
     @Synchronized
     override fun unPublish(service: Any) {
-        routers.remove(service::javaClass.name)
-        services.forEach {
-            if (it.value == service::javaClass.name) {
-                services.remove(it.key)
+        routers.remove(service::class.java.name)
+        service::class.java.declaredMethods.forEach { method ->
+            method.getAnnotation(Router::class.java)?.let {
+                if (it.path.isNotEmpty()) {
+                    services.remove(it.path)
+                    FlyingLog.d(TAG, "解绑路由：${service::class.java.name}," +
+                            "路由地址:${it.path},${method.name}")
+                }
             }
         }
-
-        FlyingLog.d(TAG, "解除路由：${service::javaClass.name}")
     }
 
     /**
      * 获取缓存得方法
      */
-    fun getCacheMethods(router: String): Array<IMethodInvoker>? = routers[services[router]]
+    fun getCacheMethods(router: String): IMethodInvoker? = services[router]
 }

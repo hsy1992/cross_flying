@@ -26,15 +26,17 @@ class FlyingMessage constructor(
         val TAG = Constant.PREFIX + FlyingMessage::class.java.simpleName
     }
 
-    fun route(router: String): FlyBundle = FlyBundle(this, router)
+    fun route(router: String): FlyBundle =
+        FlyBundle(this, router)
 
-    fun route(router: String, vararg params: Any?) = FlyArgs(this, router, params)
+    fun route(router: String, vararg params: Any?) =
+        FlyArgs(this, router, params)
 
     fun fly(requestBundle: Bundle): Bundle? {
         return ConvertFactory.INSTANCE.convertAndFly(this, requestBundle)
     }
 
-    fun fly(router: String, params: Array<Any?>): Bundle? {
+    fun fly(router: String, params: Array<out Any?>): Bundle? {
         return ConvertFactory.INSTANCE.convertAndFly(this, router, params)
     }
 }

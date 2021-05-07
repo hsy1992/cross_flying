@@ -12,11 +12,11 @@ import cn.net.hylink.flying.core.FlyingMessage
  * @Version 1.0
  */
 class FlyBundle constructor(
-        private val flyingMessage: FlyingMessage,
-        private val router: String
+    private val flyingMessage: FlyingMessage,
+    private val router: String
 ) {
 
-    private val mBundle = Bundle()
+    val mBundle = Bundle()
 
     /**
      * 发送

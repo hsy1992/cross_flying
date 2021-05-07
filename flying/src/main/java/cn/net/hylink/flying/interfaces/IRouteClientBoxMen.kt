@@ -9,7 +9,7 @@ package cn.net.hylink.flying.interfaces
  */
 interface IRouteClientBoxMen<T, R>: IBoxMem {
 
-    fun boxing(router: String?, params: Array<Any?>): T?
+    fun boxing(router: String?, params: Array<out Any?>): T?
 
     fun unboxing(t: T?): R?
 }

@@ -18,7 +18,12 @@ object ClassUtil {
     val EMPTY_TYPE_ARRAY = arrayOfNulls<Type>(1)
 
     fun methodError(method: Method, message: String, vararg arg: Any?): RuntimeException =
-            methodError(method, null, message, arg)
+        methodError(
+            method,
+            null,
+            message,
+            arg
+        )
 
     fun methodError(method: Method, cause: Throwable?, message: String,
                     vararg args: Any?): RuntimeException {
@@ -29,11 +34,20 @@ object ClassUtil {
 
     fun parameterError(method: Method?, cause: Throwable?,
                        p: Int, message: String, vararg args: Any?): RuntimeException {
-        return methodError(method!!, cause, message + " (parameter #" + (p + 1) + ")", *args)
+        return methodError(
+            method!!,
+            cause,
+            message + " (parameter #" + (p + 1) + ")",
+            *args
+        )
     }
 
     fun parameterError(method: Method?, p: Int, message: String, vararg args: Any?): RuntimeException {
-        return methodError(method!!, message + " (parameter #" + (p + 1) + ")", *args)
+        return methodError(
+            method!!,
+            message + " (parameter #" + (p + 1) + ")",
+            *args
+        )
     }
 
     fun getRawType(type: Type): Class<*> {
@@ -47,7 +61,10 @@ object ClassUtil {
         }
         if (type is GenericArrayType) {
             val componentType = type.genericComponentType
-            return Array.newInstance(getRawType(componentType), 0).javaClass
+            return Array.newInstance(
+                getRawType(
+                    componentType
+                ), 0).javaClass
         }
         if (type is TypeVariable<*>) {
             return Any::class.java
@@ -84,7 +101,10 @@ object ClassUtil {
                 if (b !is GenericArrayType) return false
                 val ga = a as GenericArrayType
                 val gb = b as GenericArrayType
-                equals(ga.genericComponentType, gb.genericComponentType)
+                equals(
+                    ga.genericComponentType,
+                    gb.genericComponentType
+                )
             }
             a is WildcardType -> {
                 if (b !is WildcardType) return false
@@ -121,7 +141,11 @@ object ClassUtil {
                 if (interfaces[i] == toResolve) {
                     return rawType.genericInterfaces[i]
                 } else if (toResolve.isAssignableFrom(interfaces[i])) {
-                    return getGenericSupertype(rawType.genericInterfaces[i], interfaces[i], toResolve)
+                    return getGenericSupertype(
+                        rawType.genericInterfaces[i],
+                        interfaces[i],
+                        toResolve
+                    )
                 }
             }
         }
@@ -133,7 +157,11 @@ object ClassUtil {
                 if (rawSupertype == toResolve) {
                     return rawType.genericSuperclass
                 } else if (toResolve.isAssignableFrom(rawSupertype)) {
-                    return getGenericSupertype(rawType.genericSuperclass, rawSupertype, toResolve)
+                    return getGenericSupertype(
+                        rawType.genericSuperclass,
+                        rawSupertype,
+                        toResolve
+                    )
                 }
                 rawType = rawSupertype
             }
@@ -158,40 +186,70 @@ object ClassUtil {
      */
     private fun getSupertype(context: Type?, contextRawType: Class<*>, supertype: Class<*>): Type? {
         require(supertype.isAssignableFrom(contextRawType))
-        return resolve(context, contextRawType,
-                getGenericSupertype(context, contextRawType, supertype))
+        return resolve(
+            context, contextRawType,
+            getGenericSupertype(
+                context,
+                contextRawType,
+                supertype
+            )
+        )
     }
 
     private fun resolve(context: Type?, contextRawType: Class<*>?, toResolve: Type?): Type? {
         var toResolve = toResolve
         while (true) {
             if (toResolve is TypeVariable<*>) {
-                toResolve = resolveTypeVariable(context, contextRawType, toResolve)
+                toResolve =
+                    resolveTypeVariable(
+                        context,
+                        contextRawType,
+                        toResolve
+                    )
                 if (toResolve == toResolve) {
                     return toResolve
                 }
             } else if (toResolve is Class<*> && toResolve.isArray) {
                 val original = toResolve
                 val componentType: Type = original.componentType
-                val newComponentType = resolve(context, contextRawType, componentType)
+                val newComponentType =
+                    resolve(
+                        context,
+                        contextRawType,
+                        componentType
+                    )
                 return if (componentType == newComponentType) original else newComponentType?.let {
                     GenericArrayTypeImpl(it)
                 }
             } else if (toResolve is GenericArrayType) {
                 val original = toResolve
                 val componentType = original.genericComponentType
-                val newComponentType = resolve(context, contextRawType, componentType)
+                val newComponentType =
+                    resolve(
+                        context,
+                        contextRawType,
+                        componentType
+                    )
                 return if (componentType == newComponentType) original else newComponentType?.let {
                     GenericArrayTypeImpl(it)
                 }
             } else if (toResolve is ParameterizedType) {
                 val original = toResolve
                 val ownerType = original.ownerType
-                val newOwnerType = resolve(context, contextRawType, ownerType)
+                val newOwnerType = resolve(
+                    context,
+                    contextRawType,
+                    ownerType
+                )
                 var changed = newOwnerType != ownerType
                 var args = original.actualTypeArguments
                 for (i in args.indices) {
-                    val resolvedTypeArgument = resolve(context, contextRawType, args[i])
+                    val resolvedTypeArgument =
+                        resolve(
+                            context,
+                            contextRawType,
+                            args[i]
+                        )
                     if (resolvedTypeArgument != args[i]) {
                         if (!changed) {
                             args = args.clone()
@@ -200,22 +258,42 @@ object ClassUtil {
                         args[i] = resolvedTypeArgument
                     }
                 }
-                return if (changed) newOwnerType?.let { ParameterizedTypeImpl(it, original.rawType, *args) } else original
+                return if (changed) newOwnerType?.let {
+                    ParameterizedTypeImpl(
+                        it,
+                        original.rawType,
+                        *args
+                    )
+                } else original
             } else if (toResolve is WildcardType) {
                 val original = toResolve
                 val originalLowerBound = original.lowerBounds
                 val originalUpperBound = original.upperBounds
                 if (originalLowerBound.size == 1) {
-                    val lowerBound = resolve(context, contextRawType, originalLowerBound[0])
+                    val lowerBound = resolve(
+                        context,
+                        contextRawType,
+                        originalLowerBound[0]
+                    )
                     if (lowerBound !== originalLowerBound[0]) {
                         val upperBoundsType = arrayOfNulls<Type>(1)
                         upperBoundsType[0] = Any::class.java
-                        return WildcardTypeImpl(upperBoundsType, arrayOf(lowerBound))
+                        return WildcardTypeImpl(
+                            upperBoundsType,
+                            arrayOf(lowerBound)
+                        )
                     }
                 } else if (originalUpperBound.size == 1) {
-                    val upperBound = resolve(context, contextRawType, originalUpperBound[0])
+                    val upperBound = resolve(
+                        context,
+                        contextRawType,
+                        originalUpperBound[0]
+                    )
                     if (upperBound !== originalUpperBound[0]) {
-                        return WildcardTypeImpl(arrayOf(upperBound), EMPTY_TYPE_ARRAY)
+                        return WildcardTypeImpl(
+                            arrayOf(upperBound),
+                            EMPTY_TYPE_ARRAY
+                        )
                     }
                 }
                 return original
@@ -230,11 +308,22 @@ object ClassUtil {
      */
     private fun resolveTypeVariable(
             context: Type?, contextRawType: Class<*>?, unknown: TypeVariable<*>): Type? {
-        val declaredByRaw: Class<*> = declaringClassOf(unknown) ?: return unknown
+        val declaredByRaw: Class<*> = declaringClassOf(
+            unknown
+        ) ?: return unknown
 
-        val declaredBy = contextRawType?.let { getGenericSupertype(context, contextRawType, declaredByRaw) }
+        val declaredBy = contextRawType?.let {
+            getGenericSupertype(
+                context,
+                contextRawType,
+                declaredByRaw
+            )
+        }
         if (declaredBy is ParameterizedType) {
-            val index = indexOf(arrayOf(declaredByRaw.typeParameters), unknown)
+            val index = indexOf(
+                arrayOf(declaredByRaw.typeParameters),
+                unknown
+            )
             return declaredBy.actualTypeArguments[index]
         }
         return unknown
@@ -299,7 +388,10 @@ object ClassUtil {
         }
         if (type is ParameterizedType) {
             for (typeArgument in type.actualTypeArguments) {
-                if (hasUnresolvableType(typeArgument)) {
+                if (hasUnresolvableType(
+                        typeArgument
+                    )
+                ) {
                     return true
                 }
             }
@@ -347,7 +439,9 @@ object ClassUtil {
         init {
             require(!(rawType is Class<*> && (rawType.enclosingClass == null)))
             for (typeArgument in typeArguments) {
-                checkNotPrimitive(typeArgument)
+                checkNotPrimitive(
+                    typeArgument
+                )
             }
         }
 
@@ -358,7 +452,10 @@ object ClassUtil {
         override fun getActualTypeArguments(): kotlin.Array<out Type> = typeArgumentsClone.clone()
 
         override fun equals(other: Any?): Boolean {
-            return other is ParameterizedType && equals(this, (other as ParameterizedType?)!!)
+            return other is ParameterizedType && equals(
+                this,
+                (other as ParameterizedType?)!!
+            )
         }
 
         override fun hashCode(): Int {
@@ -368,12 +465,26 @@ object ClassUtil {
         }
 
         override fun toString(): String {
-            if (typeArgumentsClone.isEmpty()) return typeToString(rawType)
+            if (typeArgumentsClone.isEmpty()) return typeToString(
+                rawType
+            )
             val result = StringBuilder(30 * (typeArgumentsClone.size + 1))
-            result.append(typeToString(rawType))
-            result.append("<").append(typeToString(typeArgumentsClone[0]))
+            result.append(
+                typeToString(
+                    rawType
+                )
+            )
+            result.append("<").append(
+                typeToString(
+                    typeArgumentsClone[0]
+                )
+            )
             for (i in 1 until typeArgumentsClone.size) {
-                result.append(", ").append(typeToString(typeArgumentsClone[i]))
+                result.append(", ").append(
+                    typeToString(
+                        typeArgumentsClone[i]
+                    )
+                )
             }
             return result.append(">").toString()
         }
@@ -385,7 +496,10 @@ object ClassUtil {
         override fun getGenericComponentType(): Type = componentType
 
         override fun equals(other: Any?): Boolean {
-            return other is GenericArrayType && equals(this, other)
+            return other is GenericArrayType && equals(
+                this,
+                other
+            )
         }
 
         override fun hashCode(): Int {
@@ -425,15 +539,22 @@ object ClassUtil {
                 if (lowerBound != null) arrayOf(lowerBound) else EMPTY_TYPE_ARRAY
 
         override fun equals(other: Any?): Boolean {
-            return other is WildcardType && equals(this, other)
+            return other is WildcardType && equals(
+                this,
+                other
+            )
         }
 
         override fun hashCode(): Int =
                 (if (lowerBound != null) 31 + lowerBound.hashCode() else 1) xor 31 + upperBound.hashCode()
 
         override fun toString(): String {
-            if (lowerBound != null) return "? super " + typeToString(lowerBound!!)
-            return if (upperBound === Any::class.java) "?" else "? extends " + typeToString(upperBound!!)
+            if (lowerBound != null) return "? super " + typeToString(
+                lowerBound!!
+            )
+            return if (upperBound === Any::class.java) "?" else "? extends " + typeToString(
+                upperBound!!
+            )
         }
     }
 

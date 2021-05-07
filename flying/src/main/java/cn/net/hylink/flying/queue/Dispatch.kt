@@ -113,7 +113,8 @@ class Dispatch constructor(private val looper: Looper = Looper.myLooper()!!) : E
             runnable.run()
             return
         }
-        BlockingRunnable(runnable).postAndWait(handler, timeout)
+        BlockingRunnable(runnable)
+            .postAndWait(handler, timeout)
     }
 
     /**

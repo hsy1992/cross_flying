@@ -61,8 +61,14 @@ object Constant {
      */
     const val FLY_KEY_CALLING_PACKAGE = "key_calling_package"
 
+    /**
+     * Byte 传送的大小
+     */
+    const val FLY_KEY_ARRAY_LENGTH = "array_length"
+
     object Parameters {
         const val FLAGS_BUNDLE = 1
+        const val FLAGS_ARGS = 2
     }
 
     object ResponseCode {

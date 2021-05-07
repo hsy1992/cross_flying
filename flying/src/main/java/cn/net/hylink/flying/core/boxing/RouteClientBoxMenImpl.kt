@@ -13,17 +13,19 @@ import java.util.*
  * @Date 2021/4/26 17:02
  * @Version 1.0
  */
-class RouteClientBoxMenImpl: IRouteClientBoxMen<Bundle, Bundle> {
+class RouteClientBoxMenImpl:
+    IRouteClientBoxMen<Bundle, Bundle> {
 
-    override fun boxing(router: String?, params: Array<Any?>): Bundle {
+    override fun boxing(router: String?, params: Array<out Any?>): Bundle {
         return Bundle().apply {
             this.putInt(Constant.FLY_KEY_LENGTH, params.size)
             this.putString(Constant.FLY_KEY_ROUTER, router)
-            setValues(params, this)
+            this.putInt(Constant.FLY_KEY_FLAGS, Constant.Parameters.FLAGS_ARGS)
+            setValues(this, params)
         }
     }
 
-    private fun setValues(params: Array<Any?>, bundle: Bundle) {
+    private fun setValues(bundle: Bundle, params: Array<out Any?>) {
         params.forEachIndexed { i, any ->
             val index = String.format(Locale.ENGLISH, Constant.FLY_KEY_INDEX, i)
             if (any == null) {

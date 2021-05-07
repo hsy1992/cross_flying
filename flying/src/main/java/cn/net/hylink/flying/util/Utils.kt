@@ -3,6 +3,7 @@ package cn.net.hylink.flying.util
 import android.os.Bundle
 import android.os.Parcelable
 import cn.net.hylink.flying.ashmem.Ashmem
+import cn.net.hylink.flying.constant.Constant
 import java.io.Serializable
 
 /**
@@ -28,6 +29,7 @@ object Utils {
                     Boolean::class.javaPrimitiveType!!.isAssignableFrom(clazz) ||
                     Char::class.javaPrimitiveType!!.isAssignableFrom(clazz) ||
                     ByteArray::class.java.isAssignableFrom(clazz) ||
+                    String::class.java.isAssignableFrom(clazz) ||
                     Bundle::class.java.isAssignableFrom(clazz) -> {
                 true
             }
@@ -53,7 +55,10 @@ object Utils {
             is Float -> bundle.putFloat(key, arg)
             is Byte -> bundle.putByte(key, arg)
             is Boolean -> bundle.putBoolean(key, arg)
-            is ByteArray -> bundle.putParcelable(key, Ashmem.byteArrayToFileDescriptor(arg))
+            is ByteArray -> {
+                bundle.putInt(Constant.FLY_KEY_ARRAY_LENGTH, arg.size)
+                bundle.putParcelable(key, Ashmem.byteArrayToFileDescriptor(arg))
+            }
             is String -> bundle.putString(key, arg)
             is Parcelable -> bundle.putParcelable(key, arg)
             is Serializable -> bundle.putSerializable(key, arg)

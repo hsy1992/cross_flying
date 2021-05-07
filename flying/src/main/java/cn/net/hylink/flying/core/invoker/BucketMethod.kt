@@ -25,7 +25,8 @@ class BucketMethod{
         }
         return methods[methodUnique]?.apply {
             val m = owner::class.java.getDeclaredMethod(method, *classes)
-            methods[methodUnique] = Invoker(m, owner)
+            methods[methodUnique] =
+                Invoker(m, owner)
         }
     }
 

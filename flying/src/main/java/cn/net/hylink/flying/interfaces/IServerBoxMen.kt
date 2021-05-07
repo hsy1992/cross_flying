@@ -1,7 +1,6 @@
 package cn.net.hylink.flying.interfaces
 
 import android.os.Bundle
-import android.util.Pair
 
 /**
  * @ClassName IServerBoxMen
@@ -12,7 +11,7 @@ import android.util.Pair
  */
 interface IServerBoxMen<T> : IBoxMem {
 
-    fun unboxing(t: T?): Pair<Array<Class<*>?>?, Array<Any?>?>?
+    fun unboxing(t: T): Array<Any?>
 
     fun boxing(requestBundle: Bundle?, responseBundle: Bundle?, value: Any?)
 }

@@ -10,13 +10,12 @@ import cn.net.hylink.flying.core.FlyingMessage
  * @Version 1.0
  */
 class FlyArgs constructor(
-        private val flyingMessage: FlyingMessage,
-        private val router: String,
-        vararg args: Any?
+    private val flyingMessage: FlyingMessage,
+    private val router: String,
+    private val params: Array<out Any?>
 ) {
-    private val params = args
 
     fun fly() {
-        flyingMessage.fly(router, params as Array<Any?>)
+        flyingMessage.fly(router, params)
     }
 }

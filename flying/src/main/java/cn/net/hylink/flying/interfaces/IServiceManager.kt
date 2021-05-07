@@ -1,7 +1,5 @@
 package cn.net.hylink.flying.interfaces
 
-import kotlin.reflect.KClass
-
 /**
  * @ClassName IServiceManager
  * @Description TODO

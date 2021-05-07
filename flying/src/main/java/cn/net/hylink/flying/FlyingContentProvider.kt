@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import cn.net.hylink.flying.constant.Constant
 import cn.net.hylink.flying.core.Server
+import cn.net.hylink.flying.log.FlyingLog
 import cn.net.hylink.flying.util.NotFoundRouteException
 
 /**
@@ -25,11 +26,11 @@ class FlyingContentProvider: ContentProvider() {
 
     override fun onCreate(): Boolean = true
 
-    override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
-        TODO("Not yet implemented")
-    }
+    override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?,
+                       sortOrder: String?): Cursor? = null
 
     override fun call(method: String, arg: String?, requestBundle: Bundle?): Bundle? {
+        FlyingLog.d(TAG, "response call $requestBundle")
         if (requestBundle == null) return null
         val responseBundle = Bundle()
         try {
@@ -47,6 +48,7 @@ class FlyingContentProvider: ContentProvider() {
         } catch (e: ClassNotFoundException) {
             requestBundle.putInt(Constant.FLY_KEY_RESPONSE_CODE, Constant.ResponseCode.FLY_RESPONSE_RESULT_LOST_CLASS);
         } catch (e: Exception) {
+            e.printStackTrace()
             requestBundle.putInt(Constant.FLY_KEY_RESPONSE_CODE, Constant.ResponseCode.FLY_RESPONSE_RESULT_REMOTE_EXCEPTION);
         }
 

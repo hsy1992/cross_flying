@@ -1,4 +1,4 @@
-package cn.net.hylink.flying
+package cn.net.hylink.flyingapp
 
 
 /**

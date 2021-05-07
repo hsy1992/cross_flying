@@ -35,7 +35,8 @@ class RealCall constructor(
         return try {
             flyingMessage.run {
                 val uri = this.base.buildUpon()
-                        .appendPath(Constant.FLY_PATH_START).appendPath(Constant.FLY_PATH_SEGMENT_ROUTE)
+                        .appendPath(Constant.FLY_PATH_START).appendPath(
+                        Constant.FLY_PATH_SEGMENT_ROUTE)
                         .appendPath(router).build()
                 FlyingLog.d(TAG, "uri: $uri, contentValues: $bundle")
                 this.mContextGobal.contentResolver.call(uri, "", "", bundle)
@@ -50,7 +51,8 @@ class RealCall constructor(
         return try {
             flyingMessage.run {
                 val uri = this.base.buildUpon()
-                        .appendPath(Constant.FLY_PATH_START).appendPath(Constant.FLY_PATH_SEGMENT_METHOD)
+                        .appendPath(Constant.FLY_PATH_START).appendPath(
+                        Constant.FLY_PATH_SEGMENT_METHOD)
                         .appendPath(method.name).appendQueryParameter(Constant.FLY_KEY_CLASS, service.name).build()
                 FlyingLog.d(TAG, "uri: $flyingMessage.base, contentValues: $contentValues, method: ${method.name}")
                 flyingMessage.mContextGobal.contentResolver.query(uri, arrayOfNulls(0), "", contentValues, "")
