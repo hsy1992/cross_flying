@@ -4,8 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import cn.net.hylink.flying.ServiceManager
-import cn.net.hylink.flying.annotations.Router
+//import cn.net.hylink.flying.ServiceManager
+//import cn.net.hylink.flying.annotations.Router
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,12 +13,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ServiceManager.INSTANCE.publish(this)
+//        ServiceManager.INSTANCE.publish(this)
         setContentView(R.layout.activity_main)
         tvMessage = findViewById(R.id.tv_message)
     }
 
-    @Router(path = "/test")
+//    @Router(path = "/test")
     fun test(requestBundle: Bundle, responseBundle: Bundle) {
         runOnUiThread {
             Log.e("test", Thread.currentThread().name)
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Router(path = "/testLarge")
+//    @Router(path = "/testLarge")
     fun testLarge(requestBundle: ByteArray, message: String) {
         runOnUiThread {
             tvMessage.text = message
@@ -36,6 +36,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        ServiceManager.INSTANCE.unPublish(this)
+//        ServiceManager.INSTANCE.unPublish(this)
     }
 }
