@@ -4,7 +4,7 @@ plugins {
     id 'android-aspectjx'
     id 'com.github.dcendents.android-maven'
 }
-
+group='com.github.hsy1992'
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"

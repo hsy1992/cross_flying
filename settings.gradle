@@ -1,4 +1,4 @@
 include ':librarytest'
 include ':flying'
 include ':app'
-rootProject.name = "flying"
+rootProject.name = "cross_flying"
