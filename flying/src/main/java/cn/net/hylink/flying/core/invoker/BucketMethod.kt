@@ -1,5 +1,6 @@
 package cn.net.hylink.flying.core.invoker
 
+import cn.net.hylink.flying.annotations.CrashThrows
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -14,6 +15,7 @@ class BucketMethod{
     private lateinit var owner: Any
     private var methods: ConcurrentHashMap<String, IMethodInvoker> = ConcurrentHashMap()
 
+    @CrashThrows
     @Throws(NoSuchMethodException::class)
     fun match(method: String, classes: Array<Class<*>>): IMethodInvoker? {
         val methodUnique = StringBuffer().run {

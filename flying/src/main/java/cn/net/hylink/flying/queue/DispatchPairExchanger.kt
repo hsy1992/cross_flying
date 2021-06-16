@@ -1,5 +1,6 @@
 package cn.net.hylink.flying.queue
 
+import cn.net.hylink.flying.annotations.CrashThrows
 import java.lang.RuntimeException
 import java.util.concurrent.Exchanger
 import java.util.concurrent.TimeUnit
@@ -18,12 +19,15 @@ class DispatchPairExchanger<V>: Exchanger<V>() {
 
     private var mThreadName = Thread.currentThread().name
 
+    @CrashThrows
     @Throws(InterruptedException::class)
     fun exchange0(x: V?): V = super.exchange(x)
 
+    @CrashThrows
     @Throws(InterruptedException::class, TimeoutException::class)
     fun exchange0(x: V?, timeout: Long, unit: TimeUnit?): V = super.exchange(x, timeout, unit)
 
+    @CrashThrows
     @Throws(InterruptedException::class)
     override fun exchange(x: V?): V {
         val id = Thread.currentThread().id
@@ -34,6 +38,7 @@ class DispatchPairExchanger<V>: Exchanger<V>() {
         return super.exchange(x)
     }
 
+    @CrashThrows
     @Throws(InterruptedException::class, TimeoutException::class)
     override fun exchange(x: V?, timeout: Long, unit: TimeUnit?): V {
         val id = Thread.currentThread().id

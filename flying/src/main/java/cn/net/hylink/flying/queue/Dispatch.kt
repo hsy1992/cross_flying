@@ -1,6 +1,7 @@
 package cn.net.hylink.flying.queue
 
 import android.os.*
+import cn.net.hylink.flying.annotations.CrashThrows
 import java.util.concurrent.*
 
 /**
@@ -78,9 +79,11 @@ class Dispatch constructor(private val looper: Looper = Looper.myLooper()!!) : E
         throw UnknownError("UnknownError exchange error")
     }
 
+    @CrashThrows
     @Throws(TimeoutException::class)
     fun <T> call(callable: Callable<T>): T? = call(callable, -1L)
 
+    @CrashThrows
     @Throws(TimeoutException::class)
     fun <T> call(callable: Callable<T>, timeout: Long): T? {
         try {

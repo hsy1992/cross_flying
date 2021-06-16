@@ -1,9 +1,12 @@
 package cn.net.hylink.flying.core
 
 import android.os.Bundle
+import cn.net.hylink.flying.annotations.CrashThrows
+import cn.net.hylink.flying.annotations.SingleThread
 import cn.net.hylink.flying.constant.Constant
 import cn.net.hylink.flying.core.boxing.RouteClientBoxMenImpl
 import cn.net.hylink.flying.log.FlyingLog
+import java.lang.RuntimeException
 
 /**
  * @ClassName ConvertFactory
@@ -24,6 +27,7 @@ class ConvertFactory {
         val holder = ConvertFactory()
     }
 
+    @CrashThrows
     @Synchronized
     @Throws(Exception::class)
     fun convertAndFly(flyingMessage: FlyingMessage, requestBundle: Bundle): Bundle?
@@ -32,6 +36,7 @@ class ConvertFactory {
             parseResponse(requestBundle, this)
     }
 
+    @CrashThrows
     @Synchronized
     @Throws(Exception::class)
     private fun parseResponse(requestBundle: Bundle, responseBundle: Bundle) {
@@ -52,6 +57,7 @@ class ConvertFactory {
         responseBundle.remove(Constant.FLY_KEY_RESPONSE_CODE)
     }
 
+    @CrashThrows
     @Synchronized
     @Throws(Exception::class)
     fun convertAndFly(flyingMessage: FlyingMessage,

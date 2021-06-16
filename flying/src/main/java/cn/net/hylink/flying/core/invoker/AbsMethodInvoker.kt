@@ -1,5 +1,6 @@
 package cn.net.hylink.flying.core.invoker
 
+import cn.net.hylink.flying.annotations.CrashThrows
 import cn.net.hylink.flying.annotations.MainThread
 import cn.net.hylink.flying.annotations.SingleThread
 import cn.net.hylink.flying.queue.Dispatch
@@ -32,10 +33,12 @@ abstract class AbsMethodInvoker (
     /**
      * 不分发直接调用
      */
+    @CrashThrows
     @Throws(InvocationTargetException::class, IllegalAccessException::class)
     fun invoke(owner: Any, vararg arg: Any?): Any? =
             if (mDispatch == null) target.invoke(owner, *arg) else invokeByDispatch(owner, *arg)
 
+    @CrashThrows
     @Throws(InvocationTargetException::class, IllegalAccessException::class)
     private fun invokeByDispatch(owner: Any, vararg arg: Any?): Any? {
         val exceptions = arrayOfNulls<Exception>(1)

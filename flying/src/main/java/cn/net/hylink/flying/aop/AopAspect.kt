@@ -1,6 +1,5 @@
 package cn.net.hylink.flying.aop
 
-import cn.net.hylink.flying.ServiceManager
 import cn.net.hylink.flying.log.FlyingLog
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -20,19 +19,19 @@ class AopAspect {
     /**
      * 定义 Throws
      */
-    @Pointcut("execution(@kotlin.jvm.Throws * *(..))")
+    @Pointcut("execution(@cn.net.hylink.flying.annotations.CrashThrows * *(..))")
     fun throwsAnnotated() {
-
     }
 
     @Around("throwsAnnotated()")
-    fun aroundThrowsJoinPoint(joinPoint: ProceedingJoinPoint) {
-        //查找到对应的类注入 判断是否有 onCreate 与 onDestroy
+    fun aroundThrowsJoinPoint(joinPoint: ProceedingJoinPoint): Any? {
+        var result: Any? = null
         try {
-            joinPoint.proceed()
+            result = joinPoint.proceed()
         } catch (e: Exception) {
             FlyingLog.e(message = "throwsAnnotated has error ${e.localizedMessage}")
         }
+        return result
     }
 
 }

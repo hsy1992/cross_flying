@@ -1,8 +1,9 @@
 package cn.net.hylink.flyingapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import cn.net.hylink.flying.core.FlyingMessage
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,13 +12,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun sendMessage(view: View) {
-//        FlyingMessage(
-//            this,
-//            "cn.net.hylink.librarytest"
-//        )
-//            .route("/test").apply {
-//                this.mBundle.putString("test", "测试数据")
-//            }.fly()
-
+        FlyingMessage(this, "dfsfsdf").route("/sdf").fly()
     }
 }
