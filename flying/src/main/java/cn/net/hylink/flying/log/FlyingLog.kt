@@ -15,7 +15,7 @@ class FlyingLog {
     companion object {
         val DEBUG = BuildConfig.DEBUG
 
-        private const val DEFAULT_TAG = "DEFAULT_TAG"
+        private const val DEFAULT_TAG = "FlyingLog"
 
         fun i(tag: String = DEFAULT_TAG, message: String) {
             Log.i(tag, message)

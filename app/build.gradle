@@ -33,6 +33,9 @@ android {
         jvmTarget = '1.8'
     }
 }
+aspectjx {
+    include 'cn.net.hylink'
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])

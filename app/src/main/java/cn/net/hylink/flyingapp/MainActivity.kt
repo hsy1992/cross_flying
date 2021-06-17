@@ -13,5 +13,8 @@ class MainActivity : AppCompatActivity() {
 
     fun sendMessage(view: View) {
         FlyingMessage(this, "dfsfsdf").route("/sdf").fly()
+        FlyingMessage(this, "cn.net.hylink.policingcase").route("mqtt/urlk", "asdf",
+            "asdfddd")
+            .fly()
     }
 }

@@ -2,6 +2,7 @@ package cn.net.hylink.flying.core
 
 import android.database.Cursor
 import android.os.Bundle
+import cn.net.hylink.flying.annotations.CrashThrows
 import cn.net.hylink.flying.constant.Constant
 import cn.net.hylink.flying.log.FlyingLog
 import java.lang.reflect.Method
@@ -21,6 +22,7 @@ class RealCall constructor(
         private val TAG = RealCall::class.java.simpleName
     }
 
+    @CrashThrows
     fun execute(method: Method, bundle: Bundle): Bundle? {
         return try {
             FlyingLog.d(TAG, "uri: $flyingMessage.base, contentValues: $bundle, method: ${method.name}")
@@ -31,6 +33,7 @@ class RealCall constructor(
         }
     }
 
+    @CrashThrows
     fun execute(router: String, bundle: Bundle): Bundle? {
         return try {
             flyingMessage.run {
@@ -47,6 +50,7 @@ class RealCall constructor(
         }
     }
 
+    @CrashThrows
     fun execute(method: Method, service: Class<*>, contentValues: Array<String>): Cursor? {
         return try {
             flyingMessage.run {

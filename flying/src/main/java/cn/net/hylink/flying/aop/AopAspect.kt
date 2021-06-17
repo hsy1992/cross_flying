@@ -29,7 +29,7 @@ class AopAspect {
         try {
             result = joinPoint.proceed()
         } catch (e: Exception) {
-            FlyingLog.e(message = "throwsAnnotated has error ${e.localizedMessage}")
+            FlyingLog.e(message = "flying has error ${e.localizedMessage}")
         }
         return result
     }
